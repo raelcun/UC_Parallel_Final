@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<body onload="init()" style="margin:0px;background-color:black;">
+<script>
+var map = new Array;
+var newMap = new Array;
+var mapSize = 30;
+var done = 0;
+var timer = 0;
+var color = ["darkblue","darkblue","blue","lightblue","wheat","lightgreen","green","darkgreen","ghostwhite","white"];
+function init() {
+	document.title = "Generating map";
+    for (var i = mapSize-1; i >= 0; i--) {
+    	var mapRow = "";
+    	for (var j = mapSize-1; j >= 0; j--) {
+    		mapRow += "" + Math.floor(Math.random() * 10);
+    	}
+    	map.push(mapRow);
+    }
+    newMap = map;
+    display();
+    document.title = "Smoothing map";
+    timer = setInterval("parseEach()", 1);
+}
+function parseEach() {
+	done = 0;
+	for (var i = mapSize-1; i >= 0; i--) {
+		for (var j = mapSize-1; j >= 0; j--) {
+			parseSurrounding(i,j);
+		}
+	}
+	if(done == 0) {
+		document.title = "Map complete";
+		clearInterval(timer);
+	}
+	map = newMap;
+	display();
+}
+function parseSurrounding(i, j) {
+	var count = 0;
+	var sum = 0;
+	for (var a = 1; a >= -1; a--) {
+		for (var b = 1; b >= -1; b--) {
+			if(i+a>=0 && j+b>=0 && i+a<=mapSize-1 && j+b<=mapSize-1) {
+				count += 1;
+				sum += parseInt(map[i+a][j+b]);
+			}
+		}
+	}
+	var newVal = Math.round(sum/count);
+	if(map[i][j] != newVal) {
+		done++;
+	}
+	newMap[i] = newMap[i].substring(0, j) + newVal + newMap[i].substring(j+1, mapSize);
+}
+function display() {
+	document.getElementById("map").innerHTML = "";
+	for (var i = map.length-1; i >= 0; i--) {
+		for (var j = map.length-1; j >= 0; j--) {
+			document.getElementById("map").innerHTML += "<span style='background-color:"+color[map[i][j]]+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		}
+		document.getElementById("map").innerHTML += "<br>";
+    }
+}
+</script>
+<div id="map"></div>
+</body>
+</html>

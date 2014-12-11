@@ -647,6 +647,7 @@ void test_generate_terrain() {
 
 int main()
 {
+	// RandomizeGeneratorSeed(&h_m_w, &h_m_z); // comment out for consistent testing
 	printf("Random Generator Seed: m_w(%u) m_z(%u)\n", h_m_w, h_m_z);
 
 	cudaPrintfInit();
